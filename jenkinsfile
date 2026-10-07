@@ -1,0 +1,33 @@
+```groovy
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Clone Code') {
+            steps {
+                git 'YOUR_GITHUB_REPOSITORY_URL'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t mywebsite .'
+            }
+        }
+
+        stage('Stop Old Container') {
+            steps {
+                sh 'docker stop mywebsite || true'
+                sh 'docker rm mywebsite || true'
+            }
+        }
+
+        stage('Run New Container') {
+            steps {
+                sh 'docker run -d --name mywebsite -p 80:80 mywebsite'
+            }
+        }
+    }
+}
+```
